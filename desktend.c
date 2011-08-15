@@ -40,6 +40,12 @@ void init_atoms()
     NET_WM_DESKTOP = XInternAtom(dpy, "_NET_WM_DESKTOP", false);     
 }
 
+static void handle_error(Display *d, XErrorEvent *ev)
+{
+    // Dig our head in the sand and do nothing
+    return;
+}
+
 bool open_display()
 {
     int num;
@@ -52,6 +58,9 @@ bool open_display()
     root = RootWindow(dpy, num);
 
     XSelectInput(dpy, root, PropertyChangeMask | SubstructureNotifyMask);
+
+    XSetErrorHandler((XErrorHandler) handle_error);
+
     XSync(dpy, false);
     XFlush(dpy);
 
@@ -116,13 +125,15 @@ void iterate_client_list(int number_of_desktops)
         signed long *desktop;
         desktop = (signed long *) xprop_get_data(client_list[i],
                                     NET_WM_DESKTOP, XA_CARDINAL, 0);
-        if (*desktop == last_desktop){
-            win_on_last = true;
+        if(desktop){
+            if (*desktop == last_desktop){
+                win_on_last = true;
+            }
+            if (*desktop == last_desktop -1){
+                win_on_prev = true;
+            }
+            XFree(desktop);
         }
-        if (*desktop == last_desktop -1){
-            win_on_prev = true;
-        }
-        XFree(desktop);
     }
     
     modify_desktops(win_on_last, win_on_prev, number_of_desktops);
