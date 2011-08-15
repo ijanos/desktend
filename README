@@ -1,0 +1,36 @@
+                                  desktend
+                      automatic virtual desktop extender
+
+About
+-----
+
+Update the number of virtual desktops of EWMH compatible X11 window managers.
+Add a new virtual desktop to the right every time there is a new window appears
+on the last desktop.
+
+I only tested this with openbox. Any feedback is welcome.
+
+Install
+-------
+
+Compile it with X11 libraries and c99 with gnu extension support.
+
+    gcc desktend.c -lX11 -std=gnu99 -o desktend
+
+Copy the binary wherever you like. 
+
+Usage
+-----
+
+Just run it. Close it with ctrl-c or kill it.
+
+Eg: Add it to your openbox autostart.sh file: 
+
+    echo "/path/to/desktend &" >> ~.config/openbox/autostart.sh
+
+License
+-------
+
+Licensed under GPLv3+
+
+(c) János Illés - ijanos at gmail dot com
